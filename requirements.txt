@@ -1,0 +1,2 @@
+# No external dependencies required for these mini projects.
+# All projects use standard library modules.
