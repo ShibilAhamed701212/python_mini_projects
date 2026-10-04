@@ -46,7 +46,6 @@ nosetests.xml
 coverage.xml
 *.cover
 *.py,cover
-.組合
 .pytest_cache/
 pytestdebug.log
 

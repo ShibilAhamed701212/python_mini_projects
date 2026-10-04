@@ -1,5 +1,6 @@
 import random
 
+
 def roll_dice(num_dice):
     """Simulates rolling a specified number of dice."""
     results = [random.randint(1, 6) for _ in range(num_dice)]
@@ -35,4 +36,7 @@ def main():
             print("Invalid input. Please enter 'y' or 'n'.")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print("\nGoodbye!")

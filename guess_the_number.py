@@ -1,5 +1,6 @@
 import random
 
+
 def get_valid_int(prompt):
     """Helper function to get a valid integer from user input."""
     while True:
@@ -7,6 +8,18 @@ def get_valid_int(prompt):
             return int(input(prompt))
         except ValueError:
             print("Invalid input. Please enter a whole number.")
+
+def closeness_hint(guess, secret_number, start, end):
+    """Returns feedback for a wrong guess, judged against the size of the range.
+
+    A guess counts as "far" when it misses by more than a quarter of the range,
+    so the hint works the same for negative ranges and ranges that include zero.
+    """
+    far = abs(guess - secret_number) > (end - start) / 4
+    if guess < secret_number:
+        return "Too low! Not even close." if far else "Low, but getting closer."
+    return "Too high! Way off." if far else "High, but you're in the neighborhood."
+
 
 def play_game():
     """Logic for exactly one round of the number guessing game."""
@@ -30,16 +43,8 @@ def play_game():
         if guess == secret_number:
             print(f"Congratulations! You found the number {secret_number} in {attempts} attempts.")
             break
-        elif guess < secret_number:
-            if guess < secret_number / 2:
-                print("Too low! Not even close.")
-            else:
-                print("Low, but getting closer.")
         else:
-            if guess > secret_number * 2:
-                print("Too high! Way off.")
-            else:
-                print("High, but you're in the neighborhood.")
+            print(closeness_hint(guess, secret_number, start, end))
 
 def main():
     """Main entry point for the guessing game."""
@@ -50,6 +55,7 @@ def main():
             break
 
 if __name__ == "__main__":
-    main()
-
-
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print("\nThanks for playing!")
