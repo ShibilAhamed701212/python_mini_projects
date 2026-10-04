@@ -1,5 +1,6 @@
 import random
 
+
 def roll_dice(num_dice):
     """Simulates rolling a specified number of dice."""
     results = [random.randint(1, 6) for _ in range(num_dice)]

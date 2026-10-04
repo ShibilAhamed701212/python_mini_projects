@@ -1,5 +1,6 @@
 import random
 
+
 def get_computer_choice():
     """Randomly selects rock, paper, or scissors for the computer."""
     return random.choice(['r', 'p', 's'])

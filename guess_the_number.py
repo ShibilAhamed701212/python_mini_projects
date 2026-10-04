@@ -1,5 +1,6 @@
 import random
 
+
 def get_valid_int(prompt):
     """Helper function to get a valid integer from user input."""
     while True:
