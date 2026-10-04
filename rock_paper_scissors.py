@@ -44,4 +44,7 @@ def main():
             break
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print("\nThanks for playing!")
