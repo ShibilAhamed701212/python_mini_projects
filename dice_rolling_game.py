@@ -1,5 +1,7 @@
 import random
 
+MAX_DICE = 100
+
 
 def roll_dice(num_dice):
     """Simulates rolling a specified number of dice."""
@@ -19,6 +21,9 @@ def main():
                 num_dice = int(input("How many dice would you like to roll?: "))
                 if num_dice <= 0:
                     print("Please enter a positive number.")
+                    continue
+                if num_dice > MAX_DICE:
+                    print(f"Please roll at most {MAX_DICE} dice at a time.")
                     continue
                     
                 rolls = roll_dice(num_dice)
