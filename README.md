@@ -4,7 +4,7 @@ Four small, self-contained command-line programs written in plain Python. They a
 
 | Script | What it does |
 | --- | --- |
-| `dice_rolling_game.py` | Rolls any number of six-sided dice and keeps a running count of dice rolled this session. |
+| `dice_rolling_game.py` | Rolls 1 to 100 six-sided dice at a time and keeps a running count of dice rolled this session. |
 | `guess_the_number.py` | Picks a secret number in a range you choose and tells you whether each guess is too low or too high, and roughly how far off. |
 | `name_list_manager.py` | Menu-driven list of names: view, add, remove, clear. |
 | `rock_paper_scissors.py` | Rock, paper, scissors against a random computer opponent, round after round. |

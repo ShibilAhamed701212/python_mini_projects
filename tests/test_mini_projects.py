@@ -107,11 +107,27 @@ def test_name_list_manager_add_remove_clear(monkeypatch, capsys):
 
 
 def test_dice_game_rejects_more_than_max(monkeypatch, capsys):
-    feed_input(monkeypatch, "y", str(dice_rolling_game.MAX_DICE + 1), "y", "2", "n")
+    assert dice_rolling_game.MAX_DICE == 100
+    real_roll = dice_rolling_game.roll_dice
+    requested = []
+
+    def spy(num_dice):
+        requested.append(num_dice)
+        return real_roll(num_dice)
+
+    monkeypatch.setattr(dice_rolling_game, "roll_dice", spy)
+    feed_input(monkeypatch, "y", "101", "y", "100", "n")
     dice_rolling_game.main()
     out = capsys.readouterr().out
-    assert f"at most {dice_rolling_game.MAX_DICE} dice" in out
-    assert "Total dice rolled in this session: 2" in out
+    assert "at most 100 dice" in out
+    assert requested == [100]
+    assert "Total dice rolled in this session: 100" in out
+
+
+@pytest.mark.parametrize("count", [0, -1, 101])
+def test_roll_dice_rejects_out_of_range_counts(count):
+    with pytest.raises(ValueError):
+        dice_rolling_game.roll_dice(count)
 
 
 def test_out_of_range_guess_is_not_counted(monkeypatch, capsys):
