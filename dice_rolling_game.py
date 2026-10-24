@@ -1,8 +1,12 @@
 import random
 
+MAX_DICE = 100
+
 
 def roll_dice(num_dice):
-    """Simulates rolling a specified number of dice."""
+    """Simulates rolling a specified number of dice (1 to MAX_DICE)."""
+    if not 1 <= num_dice <= MAX_DICE:
+        raise ValueError(f"num_dice must be between 1 and {MAX_DICE}")
     results = [random.randint(1, 6) for _ in range(num_dice)]
     return results
 
@@ -19,6 +23,9 @@ def main():
                 num_dice = int(input("How many dice would you like to roll?: "))
                 if num_dice <= 0:
                     print("Please enter a positive number.")
+                    continue
+                if num_dice > MAX_DICE:
+                    print(f"Please roll at most {MAX_DICE} dice at a time.")
                     continue
                     
                 rolls = roll_dice(num_dice)

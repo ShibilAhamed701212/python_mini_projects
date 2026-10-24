@@ -104,3 +104,36 @@ def test_name_list_manager_add_remove_clear(monkeypatch, capsys):
     assert "List cleared." in out
     assert "The list is currently empty." in out
     assert "Invalid choice" in out
+
+
+def test_dice_game_rejects_more_than_max(monkeypatch, capsys):
+    assert dice_rolling_game.MAX_DICE == 100
+    real_roll = dice_rolling_game.roll_dice
+    requested = []
+
+    def spy(num_dice):
+        requested.append(num_dice)
+        return real_roll(num_dice)
+
+    monkeypatch.setattr(dice_rolling_game, "roll_dice", spy)
+    feed_input(monkeypatch, "y", "101", "y", "100", "n")
+    dice_rolling_game.main()
+    out = capsys.readouterr().out
+    assert "at most 100 dice" in out
+    assert requested == [100]
+    assert "Total dice rolled in this session: 100" in out
+
+
+@pytest.mark.parametrize("count", [0, -1, 101])
+def test_roll_dice_rejects_out_of_range_counts(count):
+    with pytest.raises(ValueError):
+        dice_rolling_game.roll_dice(count)
+
+
+def test_out_of_range_guess_is_not_counted(monkeypatch, capsys):
+    monkeypatch.setattr(guess_the_number.random, "randint", lambda a, b: 7)
+    feed_input(monkeypatch, "1", "10", "50", "0", "7")
+    guess_the_number.play_game()
+    out = capsys.readouterr().out
+    assert out.count("must be between 1 and 10") == 2
+    assert "found the number 7 in 1 attempts" in out

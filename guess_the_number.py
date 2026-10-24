@@ -38,6 +38,9 @@ def play_game():
 
     while True:
         guess = get_valid_int("Enter your guess: ")
+        if not start <= guess <= end:
+            print(f"Your guess must be between {start} and {end}.")
+            continue
         attempts += 1
         
         if guess == secret_number:

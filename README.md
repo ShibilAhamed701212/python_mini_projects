@@ -4,7 +4,7 @@ Four small, self-contained command-line programs written in plain Python. They a
 
 | Script | What it does |
 | --- | --- |
-| `dice_rolling_game.py` | Rolls any number of six-sided dice and keeps a running count of dice rolled this session. |
+| `dice_rolling_game.py` | Rolls 1 to 100 six-sided dice at a time and keeps a running count of dice rolled this session. |
 | `guess_the_number.py` | Picks a secret number in a range you choose and tells you whether each guess is too low or too high, and roughly how far off. |
 | `name_list_manager.py` | Menu-driven list of names: view, add, remove, clear. |
 | `rock_paper_scissors.py` | Rock, paper, scissors against a random computer opponent, round after round. |
@@ -28,7 +28,7 @@ Every program is interactive and reads from the keyboard. `Ctrl+C` or `Ctrl+D` e
 
 ### Dice Rolling Game
 
-Asks `Roll the dice? (y/n)`, then how many dice. Zero, negative and non-numeric counts are rejected with a message.
+Asks `Roll the dice? (y/n)`, then how many dice (1 to 100 per roll). Zero, negative, non-numeric and over-100 counts are rejected with a message.
 
 ```text
 --- Professional Dice Roller ---
@@ -44,7 +44,7 @@ Thanks for using the Dice Roller. Goodbye!
 
 ### Number Guessing Game
 
-You enter the start and end of the range (inclusive, negatives allowed; the start must be smaller than the end). After each wrong guess you get one of four hints. A guess that misses by more than a quarter of the range is "not even close" / "way off"; anything nearer is "getting closer" / "in the neighborhood". When you find the number it reports how many attempts you took and offers another round.
+You enter the start and end of the range (inclusive, negatives allowed; the start must be smaller than the end). Guesses outside the range are rejected and don't count as attempts. After each wrong guess you get one of four hints. A guess that misses by more than a quarter of the range is "not even close" / "way off"; anything nearer is "getting closer" / "in the neighborhood". When you find the number it reports how many attempts you took and offers another round.
 
 ### Name List Manager
 
@@ -89,7 +89,7 @@ The sample outputs above were captured from real runs; the dice and the computer
 ├── conftest.py                   # puts the repo root on the import path for tests
 ├── requirements.txt              # empty: no runtime dependencies
 ├── requirements-dev.txt          # pytest and ruff
-└── .github/workflows/ci.yml      # lint + tests on every push and pull request
+└── .github/workflows/ci.yml      # lint + tests on pull requests and pushes to main
 ```
 
 ## Testing
@@ -100,18 +100,18 @@ ruff check .
 pytest -q
 ```
 
-The tests cover dice rolling, the rock-paper-scissors rules and input validation, integer input retries, the guessing game's hints, range check and attempt count, and a full scripted session of the name list manager. GitHub Actions runs the same commands on Python 3.9 and 3.12.
+The tests cover dice rolling and the dice limit, the rock-paper-scissors rules and input validation, integer input retries, the guessing game's hints, range checks and attempt count, and a full scripted session of the name list manager. GitHub Actions runs the same commands on Python 3.9 and 3.12 for every pull request and every push to `main`.
 
 ## Changes from the audit
 
 - **Guessing game hints were wrong around zero and for negative ranges.** The old check compared a guess with half or double the secret number, so with a secret of `0` a guess of `-1` was called "not even close", and with a secret of `-5` a guess of `-4` was "way off". Hints are now based on the distance relative to the size of the range, with regression tests.
 - **Ctrl+C / Ctrl+D crashed every program with a traceback.** They now exit with the program's goodbye message.
+- The dice roller had no upper limit, so a huge count (millions) made it very slow and memory-hungry; it now accepts at most 100 dice per roll.
+- The guessing game silently accepted guesses outside the chosen range; they are now rejected and not counted.
 - Added the pytest suite, the CI workflow and `requirements-dev.txt`, and removed a stray garbage line from `.gitignore`.
 
 ## Known limitations
 
-- The dice roller has no upper limit on the number of dice, so an extremely large count (millions) is slow and uses a lot of memory.
-- The guessing game accepts guesses outside the chosen range without saying so.
 - Nothing is saved between runs; the name list lives only in memory.
 
 ## License
